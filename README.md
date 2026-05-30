@@ -53,17 +53,42 @@ Monorepo que implementa una arquitectura de microservicios alrededor de la [Poke
 
 ---
 
+## Setup General
+
+### Requisitos
+
+- Python 3.12+
+- Las dependencias se gestionan desde `requirements.txt` en la raíz del proyecto
+
+### Crear entorno virtual e instalar dependencias
+
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate   # Windows
+source .venv/bin/activate  # Linux / WSL
+
+pip install -r requirements.txt
+```
+
+### Ejecutar servicios (orden requerido)
+
+```bash
+# Terminal 1 - Contract API
+cd contract_api
+uvicorn app.main:app --reload --port 8000
+
+# Terminal 2 - Orchestrator API
+cd orchestrator_api
+uvicorn app.main:app --reload --port 8001
+```
+
+Ambos servicios deben estar corriendo simultáneamente para que el flujo de validación funcione correctamente.
+
+---
+
 ## Orchestrator API
 
 API principal que orquesta la validación de Pokémon contra perfiles de contrato.
-
-### Setup
-
-```bash
-cd orchestrator_api
-pip install -r ..\requirements.txt
-uvicorn app.main:app --reload --port 8001
-```
 
 ### Endpoint
 
@@ -118,7 +143,7 @@ orchestrator_api/
 
 API interna que expone los perfiles de validación (reglas de stats mínimos).
 
-### Setup
+### Ejecutar
 
 ```bash
 cd contract_api
@@ -205,36 +230,3 @@ Uno de los mayores retos de este modelo es que un Pokémon puede poseer **múlti
 * **Cruce con Habilidades (`rel_pokemon_abilities`):** Se creó una tabla intermedia que conecta `fact_pokemon_stats` con la dimensión de habilidades. Cada registro representa la asignación de una habilidad específica a un Pokémon, incluyendo un atributo de contexto como `is_hidden` (si la habilidad es oculta).
 * **Cruce con Movimientos (`rel_pokemon_moves`):** De igual manera, los movimientos se desacoplan mediante una tabla puente que mapea qué Pokémon puede aprender qué movimiento. Esto permite filtrar la tabla de hechos por cualquier atributo del movimiento (como su tipo o generación) sin duplicar las métricas físicas o de estadísticas del Pokémon en la tabla principal.
 * **Cruce con Tipos (`rel_pokemon_types`):** Similar a las anteriores, maneja la relación muchos a muchos entre Pokémon y tipos, incluyendo el `slot` (posición del tipo) como atributo contextual.
-
----
-
-## Setup General
-
-### Requisitos
-
-- Python 3.12+
-- Las dependencias se gestionan desde `requirements.txt` en la raíz del proyecto
-
-### Crear entorno virtual e instalar dependencias
-
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate   # Windows
-source .venv/bin/activate  # Linux / WSL
-
-pip install -r requirements.txt
-```
-
-### Ejecutar servicios (orden requerido)
-
-```bash
-# Terminal 1 - Contract API
-cd contract_api
-uvicorn app.main:app --reload --port 8000
-
-# Terminal 2 - Orchestrator API
-cd orchestrator_api
-uvicorn app.main:app --reload --port 8001
-```
-
-Ambos servicios deben estar corriendo simultáneamente para que el flujo de validación funcione correctamente.

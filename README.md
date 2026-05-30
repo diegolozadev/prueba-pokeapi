@@ -27,17 +27,20 @@ Monorepo que implementa una arquitectura de microservicios alrededor de la [Poke
                      │ pokemon/     │          │                      │
                      │   {name}     │          │ GET /profiles/{name} │
                      └──────────────┘          └──────────────────────┘
-                                                        │
-                                                        │ perfiles definidos
-                                                        │ (reglas de validación)
-                                                        ▼
-                                              ┌──────────────────────┐
-                                              │   dwh_analytics/     │
-                                              │                      │
-                                              │ Modelo Snowflake     │
-                                              │ en Parquet           │
-                                              │  + consultas SQL     │
-                                              └──────────────────────┘
+
+                     ┌──────────────────────────────────────────────┐
+                     │              dwh_analytics/                  │
+                     │   (independiente, no es un servicio HTTP)    │
+                     │                                              │
+                     │  generate_dwh_parquet.py                     │
+                     │       │                                      │
+                     │       ▼ (consume PokeAPI directamente)       │
+                     │  PokeAPI                                     │
+                     │       │                                      │
+                     │       ▼                                      │
+                     │  DataFrames → archivos .parquet              │
+                     │  + consultas SQL analíticas                  │
+                     └──────────────────────────────────────────────┘
 ```
 
 ### Flujo de validación
@@ -149,7 +152,7 @@ uvicorn app.main:app --reload --port 8000
 
 ## DWH Analytics
 
-Módulo de Data Warehouse que construye un modelo dimensional en formato Parquet a partir de los 151 Pokémon originales, y expone consultas analíticas en SQL.
+Módulo independiente (no es un servicio HTTP). Conecta directamente a la PokeAPI con `requests`, construye DataFrames con `pandas` y genera archivos Parquet con un modelo dimensional Snowflake. Incluye consultas analíticas en SQL.
 
 ### Estructura
 

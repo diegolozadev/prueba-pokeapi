@@ -10,7 +10,7 @@ async def get_profile_rules(profile_name: str) -> dict:
         try:
             response = await client.get(f"{CONTRACT_API_URL}{profile_name}")
             
-            # Si el perfil no existe en tu Contract API, manejamos el 404
+            # Si el perfil no existe en el Contract API, manejamos el 404
             if response.status_code == 404:
                 raise HTTPException(
                     status_code=404, 

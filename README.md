@@ -178,7 +178,6 @@ dwh_analytics/
 
 ```bash
 cd dwh_analytics
-pip install pandas requests pyarrow
 python generate_dwh_parquet.py
 ```
 

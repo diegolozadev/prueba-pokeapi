@@ -1,10 +1,18 @@
 from fastapi import FastAPI
-# Importamos el enrutador de endpoints
 from app.api.endpoints import router as profile_router
 
-app = FastAPI(title="Contract API - PokeAPI Test")
+app = FastAPI(
+    title="Contract API",
+    description="API de contratos que define y expone perfiles de validación con reglas de stats mínimos para Pokémon.",
+    version="1.0.0",
+    contact={
+        "name": "PokeAPI Test",
+        "url": "https://pokeapi.co/",
+    },
+    docs_url="/docs",
+    redoc_url=None,
+)
 
-# FastAPI que registra las rutas de los perfiles
 app.include_router(profile_router)
 
 @app.get("/")

@@ -90,6 +90,10 @@ Ambos servicios deben estar corriendo simultáneamente para que el flujo de vali
 
 API principal que orquesta la validación de Pokémon contra perfiles de contrato.
 
+### Documentación interactiva (Swagger)
+
+Una vez corriendo el servicio: `http://localhost:8001/docs`
+
 ### Endpoint
 
 | Método | Ruta | Descripción |
@@ -129,12 +133,10 @@ orchestrator_api/
 │   │   └── endpoints.py            # Endpoint /validate/{pokemon}/{profile}
 │   ├── schemas/
 │   │   └── pokemon.py              # Pydantic: PokemonValidationResponse
-│   ├── services/
-│   │   ├── poke_service.py         # GET a PokeAPI, extrae stats
-│   │   ├── contract_service.py     # GET a Contract API, obtiene reglas
-│   │   └── validator_service.py    # Lógica de validación contra perfil
-│   └── core/
-└── requirements.txt
+│   └── services/
+│       ├── poke_service.py         # GET a PokeAPI, extrae stats
+│       ├── contract_service.py     # GET a Contract API, obtiene reglas
+│       └── validator_service.py    # Lógica de validación contra perfil
 ```
 
 ---
@@ -143,12 +145,9 @@ orchestrator_api/
 
 API interna que expone los perfiles de validación (reglas de stats mínimos).
 
-### Ejecutar
+### Documentación interactiva (Swagger)
 
-```bash
-cd contract_api
-uvicorn app.main:app --reload --port 8000
-```
+Una vez corriendo el servicio: `http://localhost:8000/docs`
 
 ### Endpoint
 
